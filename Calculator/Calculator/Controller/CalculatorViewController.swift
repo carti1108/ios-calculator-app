@@ -7,9 +7,6 @@
 import UIKit
 
 class CalculatorViewController: UIViewController {
-    
-    
-    
     @IBOutlet weak var numbersLabel: UILabel!
     @IBOutlet weak var operatorLabel: UILabel!
     
@@ -27,7 +24,7 @@ class CalculatorViewController: UIViewController {
         if currentNumbers.isEmpty {
             numbersLabel.text = "0"
         } else {
-            numbersLabel.text = currentNumbers
+            numbersLabel.text = currentNumbers.numberFormatter()
         }
     }
     
@@ -121,6 +118,29 @@ class CalculatorViewController: UIViewController {
         }
         
         numbersLabelUpdate()
+    }
+    
+    
+    @IBAction func touchUpInsideEqual(_ sender: UIButton) {
+        if !currentNumbers.isEmpty {
+            inputString += currentNumbers
+        }
+        
+        var formula = ExpressionParser.parse(from: inputString)
+        let result = formula.result()
+        
+        if result.haveDecimalPlace() {
+            currentNumbers = String(result)
+        } else {
+            currentNumbers = String(Int(result))
+        }
+        
+        numbersLabelUpdate()
+        operatorLabelUpdate()
+        
+        inputString = ""
+        currentNumbers = ""
+        currentOperator = ""
     }
 }
 
