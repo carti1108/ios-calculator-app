@@ -10,8 +10,8 @@ class CalculatorViewController: UIViewController {
     
     
     
-    @IBOutlet weak var NumbersLabel: UILabel!
-    @IBOutlet weak var OperatorLabel: UILabel!
+    @IBOutlet weak var numbersLabel: UILabel!
+    @IBOutlet weak var operatorLabel: UILabel!
     
     var inputString: String = ""
     var currentNumbers: String = ""
@@ -19,23 +19,23 @@ class CalculatorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NumbersLabelUpdate()
+        numbersLabelUpdate()
         operatorLabelUpdate()
     }
     
-    func NumbersLabelUpdate() {
+    func numbersLabelUpdate() {
         if currentNumbers.isEmpty {
-            NumbersLabel.text = "0"
+            numbersLabel.text = "0"
         } else {
-            NumbersLabel.text = currentNumbers
+            numbersLabel.text = currentNumbers
         }
     }
     
     func operatorLabelUpdate() {
         if currentOperator.isEmpty {
-            OperatorLabel.text = ""
+            operatorLabel.text = ""
         }
-        OperatorLabel.text = currentOperator
+        operatorLabel.text = currentOperator
     }
     
     @IBAction func touchUpInsideNumbers(_ sender: UIButton) {
@@ -44,7 +44,7 @@ class CalculatorViewController: UIViewController {
         }
         
         currentNumbers += number
-        NumbersLabelUpdate()
+        numbersLabelUpdate()
     }
     
     @IBAction func touchUpInsideOperator(_ sender: UIButton) {
@@ -61,12 +61,66 @@ class CalculatorViewController: UIViewController {
         inputString += currentNumbers + currentOperator
         currentNumbers = ""
         
-        NumbersLabelUpdate()
+        numbersLabelUpdate()
         operatorLabelUpdate()
         //스크롤뷰 업데이터도 호출 operator + currentNum
 
         print(inputString)
     }
     
+    
+    @IBAction func touchUpInsideReverseSign(_ sender: UIButton) {
+        guard !currentNumbers.isEmpty else {
+            return
+        }
+        
+        if currentNumbers.first == "-" {
+            currentNumbers.removeFirst()
+        } else {
+            currentNumbers = "-" + currentNumbers
+        }
+        
+        numbersLabelUpdate()
+    }
+    
+    @IBAction func touchUpInsideAC(_ sender: UIButton) {
+        inputString = ""
+        currentNumbers = ""
+        currentOperator = ""
+        
+        numbersLabelUpdate()
+        operatorLabelUpdate()
+    }
+    
+    
+    @IBAction func touchUpInsideCE(_ sender: UIButton) {
+        currentNumbers = ""
+        
+        numbersLabelUpdate()
+    }
+    
+    
+    @IBAction func touchUpInsideZero(_ sender: UIButton) {
+        guard let zero = sender.title(for: .normal) else {
+            return
+        }
+        
+        guard !currentNumbers.isEmpty else {
+            return
+        }
+        
+        currentNumbers += zero
+        numbersLabelUpdate()
+    }
+    
+    @IBAction func touchUpInsidePeriod(_ sender: UIButton) {
+        if currentNumbers.isEmpty {
+            currentNumbers += "0."
+        } else {
+            currentNumbers += "."
+        }
+        
+        numbersLabelUpdate()
+    }
 }
 
