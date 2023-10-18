@@ -10,59 +10,97 @@ class CalculatorViewController: UIViewController {
     @IBOutlet weak var numbersLabel: UILabel!
     @IBOutlet weak var operatorLabel: UILabel!
     
+    @IBOutlet weak var scrollStack: UIStackView!
+    @IBOutlet weak var scroll: UIScrollView!
+    
     var inputString: String = ""
     var currentNumbers: String = ""
     var currentOperator: String = ""
     
+    var tempEqual: String? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        numbersLabelUpdate()
-        operatorLabelUpdate()
+        numbersLabelUpdate(label: numbersLabel)
+        operatorLabelUpdate(label: operatorLabel)
     }
     
-    func numbersLabelUpdate() {
+    func numbersLabelUpdate(label: UILabel) {
         if currentNumbers.isEmpty {
-            numbersLabel.text = "0"
+            label.text = "0"
         } else {
-            numbersLabel.text = currentNumbers.numberFormatter()
+            label.text = currentNumbers.numberFormatter()
         }
     }
     
-    func operatorLabelUpdate() {
+    func operatorLabelUpdate(label: UILabel) {
         if currentOperator.isEmpty {
-            operatorLabel.text = ""
+            label.text = ""
         }
-        operatorLabel.text = currentOperator
+        label.text = currentOperator
     }
     
     @IBAction func touchUpInsideNumbers(_ sender: UIButton) {
         guard let number = sender.title(for: .normal) else {
             return
         }
+        if let temp = tempEqual {
+            tempEqual = nil
+        }
         
         currentNumbers += number
-        numbersLabelUpdate()
+        numbersLabelUpdate(label: numbersLabel)
     }
     
     @IBAction func touchUpInsideOperator(_ sender: UIButton) {
         guard let `operator` = sender.title(for: .normal) else {
             return
         }
-        currentOperator = `operator`
         
+        if let temp = tempEqual {
+            currentNumbers = temp
+            tempEqual = nil
+        }
+            
         guard !currentNumbers.isEmpty else {
-            operatorLabelUpdate()
+            currentOperator = `operator`
+            operatorLabelUpdate(label: operatorLabel)
             return
         }
         
+        
+        scrollStack.addArrangedSubview(makeScrollStack())
+        
+        scroll.layoutIfNeeded()
+        scroll.setContentOffset(CGPoint(x: 0, y: scroll.contentSize.height - scroll.bounds.height), animated: false)
+        
+        currentOperator = `operator`
+
         inputString += currentNumbers + currentOperator
         currentNumbers = ""
         
-        numbersLabelUpdate()
-        operatorLabelUpdate()
-        //스크롤뷰 업데이터도 호출 operator + currentNum
-
-        print(inputString)
+        numbersLabelUpdate(label: numbersLabel)
+        operatorLabelUpdate(label: operatorLabel)
+    }
+    
+    func makeScrollStack() -> UIStackView {
+        let stackView = UIStackView()
+        let operatorLabel = UILabel()
+        let numbersLabel = UILabel()
+        
+        operatorLabelUpdate(label: operatorLabel)
+        numbersLabelUpdate(label: numbersLabel)
+        
+        operatorLabel.textColor = .white
+        numbersLabel.textColor = .white
+        
+        operatorLabel.font = UIFont.preferredFont(forTextStyle: .title3)
+        numbersLabel.font = UIFont.preferredFont(forTextStyle: .title3)
+                
+        stackView.addArrangedSubview(operatorLabel)
+        stackView.addArrangedSubview(numbersLabel)
+        
+        return stackView
     }
     
     
@@ -77,7 +115,7 @@ class CalculatorViewController: UIViewController {
             currentNumbers = "-" + currentNumbers
         }
         
-        numbersLabelUpdate()
+        numbersLabelUpdate(label: numbersLabel)
     }
     
     @IBAction func touchUpInsideAC(_ sender: UIButton) {
@@ -85,15 +123,19 @@ class CalculatorViewController: UIViewController {
         currentNumbers = ""
         currentOperator = ""
         
-        numbersLabelUpdate()
-        operatorLabelUpdate()
+        numbersLabelUpdate(label: numbersLabel)
+        operatorLabelUpdate(label: operatorLabel)
+        
+        scrollStack.arrangedSubviews.forEach {
+            $0.removeFromSuperview()
+        }
     }
     
     
     @IBAction func touchUpInsideCE(_ sender: UIButton) {
         currentNumbers = ""
         
-        numbersLabelUpdate()
+        numbersLabelUpdate(label: numbersLabel)
     }
     
     
@@ -107,7 +149,7 @@ class CalculatorViewController: UIViewController {
         }
         
         currentNumbers += zero
-        numbersLabelUpdate()
+        numbersLabelUpdate(label: numbersLabel)
     }
     
     @IBAction func touchUpInsidePeriod(_ sender: UIButton) {
@@ -117,7 +159,7 @@ class CalculatorViewController: UIViewController {
             currentNumbers += "."
         }
         
-        numbersLabelUpdate()
+        numbersLabelUpdate(label: numbersLabel)
     }
     
     
@@ -128,19 +170,22 @@ class CalculatorViewController: UIViewController {
         
         var formula = ExpressionParser.parse(from: inputString)
         let result = formula.result()
-        
-        if result.haveDecimalPlace() {
+
+        if result.isNaN {
+            currentNumbers = "NaN"
+        } else if result.haveDecimalPlace() {
             currentNumbers = String(result)
         } else {
             currentNumbers = String(Int(result))
         }
-        
-        numbersLabelUpdate()
-        operatorLabelUpdate()
-        
+    
         inputString = ""
-        currentNumbers = ""
         currentOperator = ""
+        
+        numbersLabelUpdate(label: numbersLabel)
+        operatorLabelUpdate(label: operatorLabel)
+        tempEqual = currentNumbers
+        currentNumbers = ""
     }
 }
 
