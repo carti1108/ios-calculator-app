@@ -1,21 +1,21 @@
 ##  계산기
 
 ---
-### 🔎 목차
-- [팀원](#-팀원)
-- [타임라인](#-타임라인)
-- [시각화 구조](#-시각화-구조)
-- [실행화면](#-실행화면)
-- [트러블 슈팅](#-트러블-슈팅)
-- [참고 링크](#-참고-링크)
+### 목차
+- [팀원](#팀원)
+- [타임라인](#타임라인)
+- [시각화 구조](#시각화-구조)
+- [실행화면](#실행-화면)
+- [트러블 슈팅](#트러블-슈팅)
+- [참고 링크](#참고-링크)
 
 ---
-### 👥 팀원
+### 팀원
 |Kiseok|Hisop|
 |---|---|
 |[GitHub](https://github.com/carti1108)|[GitHub](https://github.com/Hi-sop/ios-calculator-app)
 
-### 📅 타임라인
+### 타임라인
 |날짜|내용|
 |------|---|
 |23.10.16| - Merge계획 수립 및 개인 코드 정리 |
@@ -25,16 +25,17 @@
 |23.10.20|- README 작성|
 
 
-### 👀 시각화 구조
+### 시각화 구조
 #### Class Diagram
 ![632a7061324ce85b6f34ebd5](https://github.com/yagom-academy/ios-calculator-app/assets/69287436/7e1e43dd-2ff8-4517-b48e-c6cdc1886ad2) 
 
-### 🖥️ 실행화면
+
+### 실행 화면  
 
 <img src="https://github.com/yagom-academy/ios-calculator-app/assets/69287436/7dcecd35-8403-4882-a6fd-233f676ae537" width="300" height="575"/>
 
 
-### 🔥 트러블 슈팅
+### 트러블 슈팅
 
 #### Queue의 자료구조 선택
 
@@ -69,7 +70,7 @@ private func scrollToBottom() {
 ```
 
 
-### 📚 참고 링크
+### 참고 링크
 [Apple 공식문서 - Array](https://developer.apple.com/documentation/swift/array)<br>
 [Apple 공식문서 - reversed](https://developer.apple.com/documentation/swift/array/reversed())<br>
 [Apple 공식문서 - UIStackView](https://developer.apple.com/documentation/uikit/uistackview)<br>
